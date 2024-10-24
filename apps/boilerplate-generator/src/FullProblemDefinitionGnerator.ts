@@ -26,9 +26,6 @@ export class FullProblemDefinitionGenerator extends BaseProblemDefinitionGenerat
     }
 
     generateCpp(): string {
-        const inputs = this.inputFields
-            .map((field) => `${this.mapTypeToCpp(field.type)} ${field.name}`)
-            .join(", ");
         const inputReads = this.inputFields
             .map((field, index) => {
                 if (field.type.startsWith("list<")) {

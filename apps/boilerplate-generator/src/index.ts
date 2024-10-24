@@ -6,7 +6,8 @@ import path from "path";
 dotenv.config();
 
 function generatePartialBoilerplate(generatorFilePath: string) {
-    const inputFilePath = path.join(__dirname,generatorFilePath, "Structure.md");
+    console.log("Generating boilerplate for ", generatorFilePath);
+    const inputFilePath = path.join(generatorFilePath, "Structure.md");
     const boilerplatePath = path.join(
         generatorFilePath,
         "boilerplate"
@@ -106,9 +107,10 @@ async function main() {
         return;
     }
     try {
-        const folders: any = await getFolders(problemsDirPath);
+        const folders: any = await getFolders(path.join(__dirname, problemsDirPath));
         for (const folder of folders) {
-            const folderPath = path.join(problemsDirPath, folder);
+            const folderPath = folder;
+            console.log({"path":folderPath});
             await generateBoilerplatesForFolder(folderPath);
         }
     } catch (err) {

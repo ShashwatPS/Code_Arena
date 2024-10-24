@@ -1,6 +1,6 @@
-Problem Name: "Classroom" 
-Function Name: classroom 
+Problem Name: "Max Element" 
+Function Name: maxElement
 Input Structure: 
-Input Field: list arr 
+Input Field: list<int> arr
 Output Structure: 
 Output Field: int result

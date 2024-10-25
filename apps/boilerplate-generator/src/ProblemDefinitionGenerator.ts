@@ -26,6 +26,7 @@ export class ProblemDefinitionGenerator extends BaseProblemDefinitionGenerator {
     }
 
     generateCpp(): string {
+        console.log(this.functionName)
         const inputs = this.inputFields
             .map((field) => `${this.mapTypeToCpp(field.type)} ${field.name}`)
             .join(", ");

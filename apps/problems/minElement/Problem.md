@@ -1,4 +1,4 @@
-## Max Element
+## Min Element
 
 Given an array of integers, find the maximum element in the array.
 
@@ -22,7 +22,7 @@ Print the maximum element in the array.
 ```plaintext
 5
 ```
- 
+
 ### Explanation
 
 The maximum element in the array is `5`.

@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int                  @id @default(autoincrement())
+  username         String               @unique
+  email            String               @unique
+  password         String
+  createdAt        DateTime             @default(now())
+  submissions      Submission[] // One user can have multiple submissions
+  contests         Contest[] // Contests a user has created or participated in
+  questionStatuses UserQuestionStatus[] // Status of questions solved by the user
+}
+
+model Contest {
+  id           Int               @id @default(autoincrement())
+  title        String
+  description  String?
+  startTime    DateTime
+  endTime      DateTime
+  createdAt    DateTime          @default(now())
+  questions    ContestQuestion[] // Questions included in the contest
+  participants User[] // Users participating in the contest
+  submissions  Submission[] // Submissions made during the contest
+}
+
+model Question {
+  id               Int                  @id @default(autoincrement())
+  title            String
+  description      String
+  difficulty       Difficulty
+  points           Int
+  createdAt        DateTime             @default(now())
+  contestQuestions ContestQuestion[] // Questions related to contests
+  practice         PracticeQuestion? // Practice version of the question
+  testCases        TestCase[] // Test cases for the question
+  userStatuses     UserQuestionStatus[] // Status of this question for different users
+  Submission       Submission[] // Submissions for this question
+  codeTemplates    CodeTemplate[] // Default code templates for each language
+}
+
+model CodeTemplate {
+  id         Int    @id @default(autoincrement())
+  questionId Int // Link this template to a specific question
+  language   String // Language code (e.g., "js", "cpp", "rs", etc.)
+  code       String // Default code template in the specific language
+
+  question Question @relation(fields: [questionId], references: [id])
+}
+
+model ContestQuestion {
+  id         Int @id @default(autoincrement())
+  contestId  Int
+  questionId Int
+  points     Int // Points assigned for the question in the contest
+
+  contest  Contest  @relation(fields: [contestId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+}
+
+model PracticeQuestion {
+  id          Int     @id @default(autoincrement())
+  questionId  Int     @unique
+  isAvailable Boolean @default(false)
+
+  question Question @relation(fields: [questionId], references: [id])
+}
+
+model Submission {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  contestId    Int? // Optional, in case the submission is not for a contest
+  questionId   Int
+  isCorrect    Boolean // Indicates if the submission is correct
+  pointsEarned Int      @default(0) // Points awarded for this submission
+  submittedAt  DateTime @default(now())
+  verdict      Verdict // Verdict of the submission (e.g., WA, AC, TLE)
+
+  user     User     @relation(fields: [userId], references: [id])
+  contest  Contest? @relation(fields: [contestId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+}
+
+model TestCase {
+  id             Int     @id @default(autoincrement())
+  questionId     Int
+  input          String // Input for the test case
+  expectedOutput String // Expected output for the test case
+  isPublic       Boolean @default(true) // Indicates if the test case is public
+
+  question Question @relation(fields: [questionId], references: [id])
+}
+
+model UserQuestionStatus {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  questionId  Int
+  isSolved    Boolean   @default(false)
+  solvedAt    DateTime?
+  lastVerdict Verdict?
+
+  user     User     @relation(fields: [userId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum Verdict {
+  AC
+  WA
+  TLE
+  RE
+  CE
+  MLE
+  PE
+}

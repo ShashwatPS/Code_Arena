@@ -42,7 +42,7 @@ function generateFullBoilerPlate(generatorFilePath: string){
     const inputFilePath = path.join(generatorFilePath, "Structure.md");
     const boilerplatePath = path.join(
         generatorFilePath,
-        "boilerplate"
+        "boilerplate-full"
     )
     const input = fs.readFileSync(inputFilePath, "utf-8");
 
@@ -109,9 +109,7 @@ async function main() {
     try {
         const folders: any = await getFolders(path.join(__dirname, problemsDirPath));
         for (const folder of folders) {
-            const folderPath = folder;
-            console.log({"path":folderPath});
-            await generateBoilerplatesForFolder(folderPath);
+            await generateBoilerplatesForFolder(folder);
         }
     } catch (err) {
         console.error("Error reading or processing folders:", err);

@@ -19,6 +19,6 @@
     "common": "*"
   },
   "exports": {
-    "./src": "./src/index.ts"
+    "./prisma": "./src/index.ts"
   }
 }

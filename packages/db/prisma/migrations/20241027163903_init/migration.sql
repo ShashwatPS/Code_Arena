@@ -29,10 +29,10 @@ CREATE TABLE "Contest" (
 -- CreateTable
 CREATE TABLE "Question" (
     "id" SERIAL NOT NULL,
+    "slug" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "difficulty" "Difficulty" NOT NULL,
-    "points" INTEGER NOT NULL,
+    "hidden" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Question_pkey" PRIMARY KEY ("id")
@@ -112,6 +112,9 @@ CREATE TABLE "_ContestToUser" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Question_slug_key" ON "Question"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PracticeQuestion_questionId_key" ON "PracticeQuestion"("questionId");

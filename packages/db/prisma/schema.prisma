@@ -34,10 +34,10 @@ model Contest {
 
 model Question {
   id               Int                  @id @default(autoincrement())
+  slug             String               @unique
   title            String
   description      String
-  difficulty       Difficulty
-  points           Int
+  hidden           Boolean              @default(true)
   createdAt        DateTime             @default(now())
   contestQuestions ContestQuestion[] // Questions related to contests
   practice         PracticeQuestion? // Practice version of the question
@@ -47,13 +47,25 @@ model Question {
   codeTemplates    CodeTemplate[] // Default code templates for each language
 }
 
+model Language {
+  id           Int            @id @default(autoincrement())
+  name         String
+  judge0Id     Int            @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  CodeTemplate CodeTemplate[]
+}
+
 model CodeTemplate {
   id         Int    @id @default(autoincrement())
   questionId Int // Link this template to a specific question
-  language   String // Language code (e.g., "js", "cpp", "rs", etc.)
+  languageId Int // Language code (e.g., "js", "cpp", "rs", etc.)
   code       String // Default code template in the specific language
 
   question Question @relation(fields: [questionId], references: [id])
+  Language Language @relation(fields: [languageId], references: [id])
+
+  @@unique([questionId, languageId])
 }
 
 model ContestQuestion {

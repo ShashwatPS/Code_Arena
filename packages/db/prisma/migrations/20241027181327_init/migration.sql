@@ -39,10 +39,21 @@ CREATE TABLE "Question" (
 );
 
 -- CreateTable
+CREATE TABLE "Language" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "judge0Id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Language_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "CodeTemplate" (
     "id" SERIAL NOT NULL,
     "questionId" INTEGER NOT NULL,
-    "language" TEXT NOT NULL,
+    "languageId" INTEGER NOT NULL,
     "code" TEXT NOT NULL,
 
     CONSTRAINT "CodeTemplate_pkey" PRIMARY KEY ("id")
@@ -117,6 +128,12 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 CREATE UNIQUE INDEX "Question_slug_key" ON "Question"("slug");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Language_judge0Id_key" ON "Language"("judge0Id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CodeTemplate_questionId_languageId_key" ON "CodeTemplate"("questionId", "languageId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "PracticeQuestion_questionId_key" ON "PracticeQuestion"("questionId");
 
 -- CreateIndex
@@ -127,6 +144,9 @@ CREATE INDEX "_ContestToUser_B_index" ON "_ContestToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "CodeTemplate" ADD CONSTRAINT "CodeTemplate_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CodeTemplate" ADD CONSTRAINT "CodeTemplate_languageId_fkey" FOREIGN KEY ("languageId") REFERENCES "Language"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ContestQuestion" ADD CONSTRAINT "ContestQuestion_contestId_fkey" FOREIGN KEY ("contestId") REFERENCES "Contest"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

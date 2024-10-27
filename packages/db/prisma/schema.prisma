@@ -57,13 +57,12 @@ model Language {
 }
 
 model CodeTemplate {
-  id         Int    @id @default(autoincrement())
-  questionId Int // Link this template to a specific question
-  languageId Int // Language code (e.g., "js", "cpp", "rs", etc.)
-  code       String // Default code template in the specific language
-
-  question Question @relation(fields: [questionId], references: [id])
-  Language Language @relation(fields: [languageId], references: [id])
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  languageId Int
+  code       String
+  question   Question @relation(fields: [questionId], references: [id])
+  Language   Language @relation(fields: [languageId], references: [id])
 
   @@unique([questionId, languageId])
 }
